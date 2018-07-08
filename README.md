@@ -1,20 +1,5 @@
-# Signing and Verifications in Bitcoin
 
-```python
-# Signing Example
-from random import randint
-
-from ecc import G, N
-from helper import double_sha256
-
-secret = 1800555555518005555555
-z = int.from_bytes(double_sha256(b'ECDSA is awesome!'), 'big')
-k = randint(0, 2**256)
-r = (k*G).x.num
-s = (z+r*secret) * pow(k, N-2, N) % N
-print(hex(z), hex(r), hex(s))
-print(secret*G)
-```
+# Verification
 
 
 ```python
@@ -31,12 +16,12 @@ v = r * pow(s, N-2, N) % N
 print((u*G + v*point).x.num == r)
 ```
 
-### Exercise 1
+### Try it
 
-#### 1.1. Which sigs are valid?
+#### Which sigs are valid?
 
 ```
-P = (887387e452b8eacc4acfde10d9aaf7f6d9a0f975aabb10d006e4da568744d06c,
+P = (887387e452b8eacc4acfde10d9aaf7f6d9a0f975aabb10d006e4da568744d06c, 
      61de6d95231cd89026e286df3b6ae4a894a3378e393e93a0f45b666329a0ae34)
 z, r, s = ec208baa0fc1c19f708a9ca96fdeff3ac3f230bb4a7ba4aede4942ad003c0f60,
           ac8d1c87e51d0d441be8b3dd5b05c8795b48875dffe00b7ffcfac23010d3a395,
@@ -46,16 +31,8 @@ z, r, s = 7c076ff316692a3d7eb3c3bb0f8b1488cf72e1afcd929e29307032997a838a3d,
           c7207fee197d27c618aea621406f6bf5ef6fca38681d82b2f06fddbdce6feab6
 ```
 
-#### 1.2. Make [these tests](/edit/session2/ecc.py) pass
-```
-ecc.py:S256Test:test_verify
-ecc.py:PrivateKeyTest:test_sign
-```
-
 
 ```python
-# Exercise 1.1
-
 from ecc import S256Point, G, N
 
 px = 0x887387e452b8eacc4acfde10d9aaf7f6d9a0f975aabb10d006e4da568744d06c
@@ -79,11 +56,19 @@ signatures = (
     # finally, uG+vP should have the x-coordinate equal to r
 ```
 
+## Test Driven Exercise
+
 
 ```python
-# Exercise 1.2
+from ecc import Signature
 
-reload(ecc)
-run_test(ecc.S256Test('test_verify'))
-run_test(ecc.PrivateKeyTest('test_sign'))
+class S256Point(S256Point):
+
+    def verify(self, z, sig):
+        # remember sig.r and sig.s are the main things we're checking
+        # remember 1/s = pow(s, N-2, N)
+        # u = z / s
+        # v = r / s
+        # u*G + v*P should have as the x coordinate, r
+        pass
 ```

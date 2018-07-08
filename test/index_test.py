@@ -15,11 +15,3 @@ class S256Test(TestCase):
         r = 0xeff69ef2b1bd93a66ed5219add4fb51e11a840f404876325a1e8ffe0529a2c
         s = 0xc7207fee197d27c618aea621406f6bf5ef6fca38681d82b2f06fddbdce6feab6
         self.assertTrue(point.verify(z, Signature(r, s)))
-
-class PrivateKeyTest(TestCase):
-
-    def test_sign(self):
-        pk = PrivateKey(randint(0, 2**256))
-        z = randint(0, 2**256)
-        sig = pk.sign(z)
-        self.assertTrue(pk.point.verify(z, sig))
