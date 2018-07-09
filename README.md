@@ -53,6 +53,7 @@ signatures = (
 
 # iterate over signatures
     # u = z / s, v = r / s
+    # remember 1/s = pow(s, N-2, N)
     # finally, uG+vP should have the x-coordinate equal to r
 ```
 
@@ -60,7 +61,7 @@ signatures = (
 
 
 ```python
-from ecc import Signature
+from ecc import Signature, S256Point, G, N
 
 class S256Point(S256Point):
 
